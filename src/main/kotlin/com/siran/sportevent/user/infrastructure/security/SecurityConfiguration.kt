@@ -29,7 +29,7 @@ class SecurityConfiguration(
                     .permitAll()
                     .requestMatchers("/actuator/**")
                     .permitAll()
-                    .requestMatchers(HttpMethod.POST, "/user")
+                    .requestMatchers(HttpMethod.PUT, "/user")
                     .authenticated()
                     .requestMatchers("/user/**")
                     .permitAll()
