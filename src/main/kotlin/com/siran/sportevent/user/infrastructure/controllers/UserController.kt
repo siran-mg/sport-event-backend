@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 data class GetUserByEmailResponse(
+    val id: String,
     val userName: String,
     val email: String,
     val photoUrl: String,
@@ -40,7 +41,8 @@ class UserController(
             return GetUserByEmailResponse(
                 email = it.email.value,
                 userName = it.email.value,
-                photoUrl = it.photoUrl
+                photoUrl = it.photoUrl,
+                id = it.id.toString()
             )
         }
 }

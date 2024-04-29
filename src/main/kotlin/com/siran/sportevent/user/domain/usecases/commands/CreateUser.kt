@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class CreateUser(
     val userRepository: UserRepository,
 ) : ICreateUser {
-    override suspend fun execute(input: CreateUserRequest) {
+    override fun execute(input: CreateUserRequest) {
         try {
             userRepository.getUserByEmail(input.email)
         } catch (e: Exception) {

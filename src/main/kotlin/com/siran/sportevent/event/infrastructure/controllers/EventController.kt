@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
-@RestController("api")
+@RestController("/events")
 class EventController(
-    private val createEvent: ICreateEvent
+    private val createEvent: ICreateEvent,
 ) {
 
-    @PostMapping("/events")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     suspend fun createEvent(createEventRequest: CreateEventRequest) {
         return createEvent.execute(createEventRequest)

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class GetUserByEmail(
-    val userRepository: UserRepository
-): IGetUserByEmail {
-    override suspend fun execute(input: String): User? {
+    val userRepository: UserRepository,
+) : IGetUserByEmail {
+    override fun execute(input: String): User? {
         return userRepository.getUserByEmail(input)
     }
 }

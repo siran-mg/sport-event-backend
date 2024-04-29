@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.Date
+import java.util.*
 
 @Service
 class AuthenticationService(
@@ -15,7 +15,7 @@ class AuthenticationService(
     private val tokenService: TokenService,
     private val jwtProperties: JwtProperties,
     private val refreshTokenRepository: RefreshTokenRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
 ) {
     fun authentication(authenticationRequest: AuthenticationRequest): AuthenticationResponse {
         authManager.authenticate(
@@ -63,6 +63,6 @@ class AuthenticationService(
         Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
 
     private fun getRefreshTokenExpiration(): Date =
-        Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration)
+        Date(System.currentTimeMillis() + 3600 * 24 * 7)
 }
 

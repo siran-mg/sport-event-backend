@@ -3,6 +3,7 @@ package com.siran.sportevent.user.infrastructure.security
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
@@ -19,21 +20,26 @@ class JwtAuthenticationFilter(
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val authHeader: String? = request.getHeader("Authorization")
         if (authHeader.doesNotContainBearerToken()) {
             filterChain.doFilter(request, response)
             return
         }
-        val jwtToken = authHeader!!.extractTokenValue()
-        val email = tokenService.extractEmail(jwtToken)
-        if (email != null && SecurityContextHolder.getContext().authentication == null) {
-            val foundUser = userDetailsService.loadUserByUsername(email)
-            if (tokenService.isValid(jwtToken, foundUser))
-                updateContext(foundUser, request)
-            filterChain.doFilter(request, response)
+        try {
+            val jwtToken = authHeader!!.extractTokenValue()
+            val email = tokenService.extractEmail(jwtToken)
+            if (email != null && SecurityContextHolder.getContext().authentication == null) {
+                val foundUser = userDetailsService.loadUserByUsername(email)
+                if (tokenService.isValid(jwtToken, foundUser))
+                    updateContext(foundUser, request)
+                filterChain.doFilter(request, response)
+            }
+        } catch (e: Exception) {
+            response.sendError(HttpStatus.UNAUTHORIZED.value())
         }
+
     }
 
     private fun String?.doesNotContainBearerToken() = this == null || !this.startsWith("Bearer ")
