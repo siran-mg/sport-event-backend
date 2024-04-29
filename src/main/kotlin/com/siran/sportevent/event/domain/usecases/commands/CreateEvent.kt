@@ -7,10 +7,8 @@ import com.siran.sportevent.event.domain.valueobjects.EventAction
 import com.siran.sportevent.event.domain.valueobjects.EventDescription
 import com.siran.sportevent.event.domain.valueobjects.EventName
 import kotlinx.coroutines.runBlocking
-import org.springframework.stereotype.Service
 import java.util.*
 
-@Service
 class CreateEvent(
     private val eventRepository: EventRepository,
     private val actionPublisher: ActionPublisher,

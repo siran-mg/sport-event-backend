@@ -1,5 +1,7 @@
 package com.siran.sportevent.event.infrastructure.controllers
 
+import com.siran.sportevent.event.domain.usecases.commands.CreateOrganizer
+import com.siran.sportevent.event.domain.usecases.commands.CreateOrganizerRequest
 import com.siran.sportevent.event.domain.usecases.commands.IUploadOrganizerProfilePhoto
 import com.siran.sportevent.event.domain.usecases.commands.UploadOrganizerProfilePhotoRequest
 import com.siran.sportevent.event.domain.valueobjects.PhotoProfile
@@ -18,10 +20,30 @@ import java.time.Instant
 class OrganizerController(
     val uploadOrganizerProfilePhoto: IUploadOrganizerProfilePhoto,
     val userRepository: UserRepository,
+    val createOrganizer: CreateOrganizer,
 ) {
 
     @PostMapping("/upload-photo-profile")
     fun uploadPhotoProfile(@RequestParam("file") multipartFile: MultipartFile): PhotoProfile? {
+        return executeUploadPhotoProfile(multipartFile)
+    }
+
+    @PostMapping("/register")
+    fun registerOrganizer(
+        @RequestParam("file") multipartFile: MultipartFile,
+        createOrganizerRequest: CreateOrganizerRequest,
+    ) {
+        val photoProfile = executeUploadPhotoProfile(multipartFile)
+        return createOrganizer.execute(
+            input = createOrganizerRequest.copy(
+                photoProfile = photoProfile?.value ?: ""
+            )
+        )
+    }
+
+    private fun executeUploadPhotoProfile(
+        multipartFile: MultipartFile,
+    ): PhotoProfile? {
         val authentication = SecurityContextHolder.getContext().authentication
 
         val tempFile = File.createTempFile(Instant.now().toEpochMilli().toString(), ".png")

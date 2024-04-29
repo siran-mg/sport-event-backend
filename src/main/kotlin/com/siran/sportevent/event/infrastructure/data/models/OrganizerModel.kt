@@ -7,4 +7,5 @@ import jakarta.persistence.Id
 class OrganizerModel(
     @Id val id: String,
     val userId: String,
+    val photoProfile: String?,
 )
